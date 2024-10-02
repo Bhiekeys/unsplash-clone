@@ -2,7 +2,8 @@ import { SearchNormal1 } from 'iconsax-react';
 import { useState, useEffect } from 'react';
 import PhotoGrid from './PhotoGrid';
 import axios from 'axios';
-
+import Lottie from 'lottie-react';
+import sorry from '../assets/sorry.json';
 const SearchBar = () => {
   const [searchTerm, setSearchTerm] = useState('african');
   const [loading, setLoading] = useState(false);
@@ -12,6 +13,7 @@ const SearchBar = () => {
   const [displayedSearchTerm, setDisplayedSearchTerm] = useState('african');
   const [noResults, setNoResults] = useState(false);
   const [show, setShow] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const API_URL = 'https://api.unsplash.com/search/photos';
   const IMAGE_PER_PAGE = 20;
 
@@ -46,6 +48,9 @@ const SearchBar = () => {
       }, 200);
     } catch (error) {
       console.log(error);
+      setErrorMessage(
+        'An error occurred while fetching images. Please try again later.'
+      );
 
       setLoading(false);
       setTimeout(() => {
@@ -124,8 +129,16 @@ const SearchBar = () => {
           )}
         </div>
       </div>
-
-      <PhotoGrid isLoading={loading} photos={photos} />
+      {errorMessage ? (
+        <div className="pt-72 flex flex-col items-center justify-center ">
+          <Lottie animationData={sorry} loop={true} className="h-[230px]" />
+          <div className="text-center max-w-[350px] text-lg font-light">
+            {errorMessage}
+          </div>
+        </div>
+      ) : (
+        <PhotoGrid isLoading={loading} photos={photos} />
+      )}
     </div>
   );
 };
