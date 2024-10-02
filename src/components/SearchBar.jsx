@@ -11,6 +11,7 @@ const SearchBar = () => {
   const [hasMore, setHasMore] = useState(true);
   const [displayedSearchTerm, setDisplayedSearchTerm] = useState('african');
   const [noResults, setNoResults] = useState(false);
+  const [show, setShow] = useState(false);
   const API_URL = 'https://api.unsplash.com/search/photos';
   const IMAGE_PER_PAGE = 20;
 
@@ -44,7 +45,8 @@ const SearchBar = () => {
         window.scrollTo({ top: window.scrollY - 20, behavior: 'auto' });
       }, 200);
     } catch (error) {
-      console.log(error?.response?.data?.errors[0]);
+      console.log(error);
+
       setLoading(false);
       setTimeout(() => {
         window.scrollTo({ top: window.scrollY - 100, behavior: 'auto' });
@@ -60,6 +62,7 @@ const SearchBar = () => {
     setDisplayedSearchTerm(searchTerm);
     setSearchTerm('');
     fetchImages(true);
+    setShow(true);
   };
 
   const handleScroll = () => {
@@ -106,17 +109,19 @@ const SearchBar = () => {
               Search
             </button>
           </form>
-          {photos.length > 0 && (
-            <h2 className={`text-center mt-6 text-lg font-light `}>
-              {` Search result for '${displayedSearchTerm}'`}
-            </h2>
-          )}
+
+          <h2
+            className={`text-center mt-6 text-lg font-light ${
+              !show && 'text-transparent'
+            }`}>
+            {` Search result for '${displayedSearchTerm}'`}
+          </h2>
+
           {noResults && (
             <h2 className="text-center mt-6 text-lg font-light text-red-500 ">
               {`No results found for '${displayedSearchTerm}'`}
             </h2>
           )}
-         
         </div>
       </div>
 
