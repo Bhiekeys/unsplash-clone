@@ -132,7 +132,7 @@ const SearchBar = () => {
       {errorMessage ? (
         <div className="pt-72 flex flex-col items-center justify-center ">
           <Lottie animationData={sorry} loop={true} className="h-[230px]" />
-          <div className="text-center max-w-[350px] text-lg font-light">
+          <div className="text-center max-w-[350px] pb-10 text-lg font-light ">
             {errorMessage}
           </div>
         </div>
