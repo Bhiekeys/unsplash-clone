@@ -23,7 +23,7 @@ const SearchBar = () => {
     setLoading(true);
     try {
       const { data } = await axios.get(
-        `${API_URL}?query=${searchTerm}&page=${page}&per_page=${IMAGE_PER_PAGE}&client_id=${
+        `${API_URL}?query=${displayedSearchTerm}&page=${page}&per_page=${IMAGE_PER_PAGE}&client_id=${
           import.meta.env.VITE_API_KEY
         }`
       );
@@ -36,7 +36,7 @@ const SearchBar = () => {
       } else {
         setNoResults(false);
       }
-
+      setErrorMessage('');
       setSearchTerm('');
       setPhotos((prevPhotos) =>
         isInitialLoad ? data.results : [...prevPhotos, ...data.results]
@@ -86,7 +86,7 @@ const SearchBar = () => {
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [loading, hasMore]);
+  }, [loading, hasMore, displayedSearchTerm]);
 
   return (
     <div>
@@ -121,14 +121,16 @@ const SearchBar = () => {
             }`}>
             {` Search result for '${displayedSearchTerm}'`}
           </h2>
-
-          {noResults && (
-            <h2 className="text-center mt-6 text-lg font-light text-red-500 ">
-              {`No results found for '${displayedSearchTerm}'`}
-            </h2>
-          )}
         </div>
       </div>
+      {noResults && (
+        <div className="pt-72 flex flex-col items-center justify-center ">
+          <Lottie animationData={sorry} loop={true} className="h-[230px]" />
+          <div className="text-center max-w-[350px] pb-10 text-lg font-light ">
+            {`No results found for '${displayedSearchTerm}'`}
+          </div>
+        </div>
+      )}
       {errorMessage ? (
         <div className="pt-72 flex flex-col items-center justify-center ">
           <Lottie animationData={sorry} loop={true} className="h-[230px]" />
