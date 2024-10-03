@@ -15,14 +15,13 @@ const SearchBar = () => {
   const [show, setShow] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const API_URL = 'https://api.unsplash.com/search/photos';
-  const IMAGE_PER_PAGE = 2;
-
+  const IMAGE_PER_PAGE = 9;
   const fetchImages = async (isInitialLoad = false) => {
     if (!hasMore && !isInitialLoad && loading) return;
 
     setLoading(true);
     try {
-       const searchQuery = searchTerm ? searchTerm : displayedSearchTerm;
+      const searchQuery = searchTerm ? searchTerm : displayedSearchTerm;
       const { data } = await axios.get(
         `${API_URL}?query=${searchQuery}&page=${page}&per_page=${IMAGE_PER_PAGE}&client_id=${
           import.meta.env.VITE_API_KEY
@@ -71,7 +70,6 @@ const SearchBar = () => {
     setSearchTerm('');
     fetchImages(true);
     setShow(true);
-
   };
 
   const handleScroll = () => {
