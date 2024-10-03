@@ -15,15 +15,16 @@ const SearchBar = () => {
   const [show, setShow] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const API_URL = 'https://api.unsplash.com/search/photos';
-  const IMAGE_PER_PAGE = 20;
+  const IMAGE_PER_PAGE = 2;
 
   const fetchImages = async (isInitialLoad = false) => {
     if (!hasMore && !isInitialLoad && loading) return;
 
     setLoading(true);
     try {
+       const searchQuery = searchTerm ? searchTerm : displayedSearchTerm;
       const { data } = await axios.get(
-        `${API_URL}?query=${displayedSearchTerm}&page=${page}&per_page=${IMAGE_PER_PAGE}&client_id=${
+        `${API_URL}?query=${searchQuery}&page=${page}&per_page=${IMAGE_PER_PAGE}&client_id=${
           import.meta.env.VITE_API_KEY
         }`
       );
@@ -38,9 +39,11 @@ const SearchBar = () => {
       }
       setErrorMessage('');
       setSearchTerm('');
-      setPhotos((prevPhotos) =>
-        isInitialLoad ? data.results : [...prevPhotos, ...data.results]
-      );
+      if (isInitialLoad) {
+        setPhotos(data.results);
+      } else {
+        setPhotos((prevPhotos) => [...prevPhotos, ...data.results]);
+      }
       setPage((prevPage) => prevPage + 1);
       setLoading(false);
       setTimeout(() => {
@@ -68,6 +71,7 @@ const SearchBar = () => {
     setSearchTerm('');
     fetchImages(true);
     setShow(true);
+
   };
 
   const handleScroll = () => {
@@ -102,7 +106,7 @@ const SearchBar = () => {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search photos/illustrations"
-                className="p-4 text-base w-[150px] md:w-[320px] outline-none"
+                className={`p-4 text-base w-[150px] md:w-[320px] outline-none `}
               />
             </div>
             <button
